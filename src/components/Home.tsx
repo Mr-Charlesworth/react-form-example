@@ -2,16 +2,10 @@ import { FC } from "react";
 
 const Home: FC<{ loggedInUser: string }> = ({ loggedInUser }) => {
 
-  const loggedIn = loggedInUser !== ''
+  const greeting = loggedInUser === '' ? "Please login or register" : `Welcome home ${loggedInUser}!`
 
   return (
-    <>
-      {loggedIn ? (
-      <p>{`Welcome home ${loggedInUser}!`}</p>
-      ) : (
-        <p>{"Please login or signup!"}</p>
-      )}
-    </>
+    <p>{greeting}</p>
   );
 };
 

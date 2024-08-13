@@ -11,15 +11,15 @@ const RegisterRefs: FC<{
   setLoggedInUser: React.Dispatch<React.SetStateAction<string>>,
 }> = ({ otherUsers, setOtherUsers, setLoggedInUser }) => {
 
-  const [usernameErrors, setUsernameError] = useState<string[]>([])
-  const [passwordErrors, setPasswordError] = useState<string[]>([])
-  const [confirmationErrors, setConfirmationError] = useState<string[]>([])
+  const [usernameErrors, setUsernameError] = useState<string[]>([]);
+  const [passwordErrors, setPasswordError] = useState<string[]>([]);
+  const [confirmationErrors, setConfirmationError] = useState<string[]>([]);
 
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const confirmationRef = useRef<HTMLInputElement>(null);
 
-  const submitHandler = (e: React.FormEvent) => {
+  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const username = usernameRef.current!.value;
@@ -34,15 +34,13 @@ const RegisterRefs: FC<{
     setPasswordError(() => newPasswordErrors)
     setConfirmationError(() => newConfirmationErrors)
 
-    const hasErrors = (
-      newUsernameErrors.length > 0 ||
-      newPasswordErrors.length > 0 ||
-      newConfirmationErrors.length > 0
-    )
+    const hasErrors = [newUsernameErrors, newPasswordErrors, newConfirmationErrors]
+      .some((errArray) => errArray.length > 0)
 
     if (!hasErrors) {
       setLoggedInUser(username);
-      setOtherUsers((prev) => [...prev, { username: username, password: password }])
+      setOtherUsers((prev) => [...prev, { username: username, password: password }]);
+      alert('That went well!')
     }
   }
 

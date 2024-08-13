@@ -21,43 +21,41 @@ const RegisterState: FC<{
     confirmation: '',
   });
 
-  const [touched, setTouched] = useState({
+  const [dirty, setDirty] = useState({
     username: false,
     password: false,
     confirmation: false,
-  })
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormValues((prev) => ({
       ...prev,
       [e.target.name]: e.target.value
-    }))
-    setTouched((prev) => ({
+    }));
+    setDirty((prev) => ({
       ...prev,
       [e.target.name]: true,
-    }))
-  }
+    }));
+  };
 
   useEffect(() => {
     setUsernameError(() => validateUsername(formValues.username, otherUsers.map((u) => u.username)));
     setPasswordError(() => validatePassword(formValues.password));
     setConfirmationError(() => validateConfirmation(formValues.password, formValues.confirmation));
-  }, [formValues, otherUsers])
+  }, [formValues, otherUsers]);
 
-  const submitHandler = () => {
-
-    const hasErrors = (
-      usernameErrors.length > 0 ||
-      passwordErrors.length > 0 ||
-      confirmationErrors.length > 0
-    )
+  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const hasErrors = [usernameErrors, passwordErrors, confirmationErrors]
+      .some((errArray) => errArray.length > 0);
 
     if (!hasErrors) {
       setLoggedInUser(formValues.username);
-      setOtherUsers((prev) => [...prev, { username: formValues.username, password: formValues.password }])
+      setOtherUsers((prev) => [...prev, { username: formValues.username, password: formValues.password }]);
+      alert('That went well!');
     }
 
-  }
+  };
 
   const invalidFeedback = css({
     color: 'red',
@@ -73,7 +71,7 @@ const RegisterState: FC<{
             {"Username"}
           </label>
           <input onChange={handleChange} type="text" className="form-control" name="username" id="username" />
-          {touched.username && usernameErrors.map((feedback, i) => (
+          {dirty.username && usernameErrors.map((feedback, i) => (
             <div key={i} className={invalidFeedback}>{feedback}</div>
           ))}
         </div>
@@ -82,7 +80,7 @@ const RegisterState: FC<{
             {"Password"}
           </label>
           <input onChange={handleChange} type="password" className="form-control" name="password" id="password" />
-          {touched.password && passwordErrors.map((feedback, i) => (
+          {dirty.password && passwordErrors.map((feedback, i) => (
             <div key={i} className={invalidFeedback}>{feedback}</div>
           ))}
         </div>
@@ -91,7 +89,7 @@ const RegisterState: FC<{
             {"Confirmation"}
           </label>
           <input onChange={handleChange} type="password" className="form-control" name="confirmation" id="confirmation" />
-          {touched.confirmation && confirmationErrors.map((feedback, i) => (
+          {dirty.confirmation && confirmationErrors.map((feedback, i) => (
             <div key={i} className={invalidFeedback}>{feedback}</div>
           ))}
         </div>
