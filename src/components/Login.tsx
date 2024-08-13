@@ -1,11 +1,15 @@
 import { FC, useRef, useState } from "react";
 
+import { useNavigate } from "react-router-dom";
+
 import User from "../models/user";
 
 const Login: FC<{
   otherUsers: User[],
   setLoggedInUser: React.Dispatch<React.SetStateAction<string>>
 }> = ({ otherUsers, setLoggedInUser }) => {
+
+  const navigate = useNavigate();
 
   const [invalidLogin, setInvalidLogin] = useState(false)
 
@@ -20,7 +24,8 @@ const Login: FC<{
     const foundUser = otherUsers.find((u) => u.username === username);
     if (foundUser && foundUser.password === password) {
       alert('You can login!');
-      setLoggedInUser(username)
+      setLoggedInUser(username);
+      navigate('/');
     } else {
       setInvalidLogin(true);
     }

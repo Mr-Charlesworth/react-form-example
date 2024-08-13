@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from "react";
 
 import { css } from "@emotion/css";
+import { useNavigate } from "react-router-dom";
 
 import User from "../models/user";
 import { validateConfirmation, validatePassword, validateUsername } from "../utils/userValidation";
@@ -10,6 +11,8 @@ const RegisterState: FC<{
   setLoggedInUser: React.Dispatch<React.SetStateAction<string>>,
   setOtherUsers: React.Dispatch<React.SetStateAction<User[]>>,
 }> = ({ otherUsers, setLoggedInUser, setOtherUsers }) => {
+
+  const navigate = useNavigate();
 
   const [usernameErrors, setUsernameError] = useState<string[]>([])
   const [passwordErrors, setPasswordError] = useState<string[]>([])
@@ -53,6 +56,7 @@ const RegisterState: FC<{
       setLoggedInUser(formValues.username);
       setOtherUsers((prev) => [...prev, { username: formValues.username, password: formValues.password }]);
       alert('That went well!');
+      navigate('/');
     }
 
   };
