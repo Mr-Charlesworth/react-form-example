@@ -43,7 +43,6 @@ const RegisterRefs: FC<{
     if (!hasErrors) {
       setLoggedInUser(username);
       setOtherUsers((prev) => [...prev, { username: username, password: password }]);
-      alert('That went well!');
       navigate('/');
     }
   }

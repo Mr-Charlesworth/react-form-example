@@ -55,7 +55,6 @@ const RegisterState: FC<{
     if (!hasErrors) {
       setLoggedInUser(formValues.username);
       setOtherUsers((prev) => [...prev, { username: formValues.username, password: formValues.password }]);
-      alert('That went well!');
       navigate('/');
     }
 
