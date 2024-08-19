@@ -1,48 +1,55 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import User from "./models/user";
-import RegisterRefs from "./components/RegisterRefs"
-import Login from "./components/Login";
-import Navbar from "./components/Navbar";
-import RegisterState from "./components/RegisterState";
-import Home from "./components/Home";
-import NotFound from "./components/NotFound";
-import UserList from "./components/UserList";
+import AuthContext from "./store/AuthContext";
+import Dashboard from "./components/Dashboard";
 
 const App = () => {
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const [otherUsers, setOtherUsers] = useState<User[]>([]);
-  const [loggedInUser, setLoggedInUser] = useState('');
+  const storedUsers = JSON.parse(localStorage.getItem('users') as string) as User[] || []
+  const storedLoggedInUser = localStorage.getItem('loggedInUser') || ''
+
+  const [otherUsers, setOtherUsers] = useState<User[]>(storedUsers);
+  const [loggedInUser, setLoggedInUser] = useState(storedLoggedInUser);
+
+  useEffect(() => {
+    localStorage.setItem('loggedInUser', loggedInUser)
+  }, [loggedInUser]);
+
+  useEffect(() => {
+    localStorage.setItem('users', JSON.stringify(otherUsers))
+  }, [otherUsers]);
 
   const logout = () => {
     setLoggedInUser('');
     navigate('/');
   };
 
+  const login = (username: string) => {
+    setLoggedInUser(username);
+  };
+
+  const addUser = (newUser: User) => {
+    setOtherUsers((prev) => [...prev, newUser]);
+  }
+
   const isLoggedIn = loggedInUser !== '';
 
   return (
-    <div className="container mt-3">
-      <Navbar isLoggedIn={isLoggedIn} logout={logout} />
-      <Routes>
-        <Route path={'*'} element={<NotFound />} />
-        <Route path={'/users'} element={<UserList users={otherUsers} />} />
-        <Route path={'/'} element={<Home isLoggedIn={isLoggedIn} loggedInUser={loggedInUser} />} />
-        <Route
-          path={'/register-state'}
-          element={<RegisterState otherUsers={otherUsers} setLoggedInUser={setLoggedInUser} setOtherUsers={setOtherUsers} />}
-          />
-        <Route
-          path={'/register-refs'}
-          element={<RegisterRefs otherUsers={otherUsers} setLoggedInUser={setLoggedInUser} setOtherUsers={setOtherUsers}/>}
-        />
-        <Route path={'/login'} element={<Login otherUsers={otherUsers} setLoggedInUser={setLoggedInUser} />} />
-      </Routes>
-    </div>
+    <AuthContext.Provider value={{
+      users: otherUsers,
+      loggedInUser: loggedInUser,
+      addUser: addUser,
+      login: login,
+      logout: logout,
+      isLoggedIn: isLoggedIn,
+    }} >
+      <Dashboard/>
+    </AuthContext.Provider>
   )
 }
 

@@ -9,7 +9,7 @@ const UserListItem: FC<{ user: UserModel }> = ({ user }) => {
     <div className="card">
       <div className="card-body">
         <p>{`Username: ${user.username}`}</p>
-        <Link to={`/users/{username}`}>More Details</Link>
+        <Link to={`/users/${user.username}`}>More Details</Link>
       </div>
     </div>
   )

@@ -1,7 +1,9 @@
-import { FC } from "react";
+import { FC, useContext } from "react";
 
-const Home: FC<{ loggedInUser: string, isLoggedIn: boolean }> = ({ loggedInUser, isLoggedIn }) => {
+import AuthContext, { AuthContextType } from "../store/AuthContext";
 
+const Home: FC = () => {
+  const { isLoggedIn, loggedInUser } = useContext(AuthContext) as AuthContextType;
   const greeting = isLoggedIn ? `Welcome home ${loggedInUser}!` : "Please login or register";
 
   return (

@@ -1,9 +1,11 @@
-import { FC } from "react"
+import { FC, useContext } from "react"
 
-import UserModel from "../models/user"
 import UserListItem from "./UserListItem"
+import AuthContext, { AuthContextType } from "../store/AuthContext";
 
-const UserList: FC<{ users: UserModel[] }> = ({ users }) => {
+const UserList: FC = () => {
+  const { users } = useContext(AuthContext) as AuthContextType;
+
   return users.map((user) => (<UserListItem key={user.username} user={user} />));
 };
 

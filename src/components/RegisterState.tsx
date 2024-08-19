@@ -1,17 +1,13 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 
 import { css } from "@emotion/css";
 import { useNavigate } from "react-router-dom";
 
-import User from "../models/user";
 import { validateConfirmation, validatePassword, validateUsername } from "../utils/userValidation";
+import AuthContext, { AuthContextType } from "../store/AuthContext";
 
-const RegisterState: FC<{
-  otherUsers: User[],
-  setLoggedInUser: React.Dispatch<React.SetStateAction<string>>,
-  setOtherUsers: React.Dispatch<React.SetStateAction<User[]>>,
-}> = ({ otherUsers, setLoggedInUser, setOtherUsers }) => {
-
+const RegisterState: FC = () => {
+  const { users, login, addUser } = useContext(AuthContext) as AuthContextType;
   const navigate = useNavigate();
 
   const [usernameErrors, setUsernameError] = useState<string[]>([])
@@ -42,10 +38,10 @@ const RegisterState: FC<{
   };
 
   useEffect(() => {
-    setUsernameError(() => validateUsername(formValues.username, otherUsers.map((u) => u.username)));
+    setUsernameError(() => validateUsername(formValues.username, users.map((u) => u.username)));
     setPasswordError(() => validatePassword(formValues.password));
     setConfirmationError(() => validateConfirmation(formValues.password, formValues.confirmation));
-  }, [formValues, otherUsers]);
+  }, [formValues, users]);
 
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -53,8 +49,8 @@ const RegisterState: FC<{
       .some((errArray) => errArray.length > 0);
 
     if (!hasErrors) {
-      setLoggedInUser(formValues.username);
-      setOtherUsers((prev) => [...prev, { username: formValues.username, password: formValues.password }]);
+      login(formValues.username);
+      addUser({ username: formValues.username, password: formValues.password });
       navigate('/');
     }
 

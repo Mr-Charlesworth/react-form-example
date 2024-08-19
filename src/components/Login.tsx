@@ -1,36 +1,28 @@
-import { FC, useRef, useState } from "react";
+import { FC, useContext, useRef, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
+import AuthContext, { AuthContextType } from "../store/AuthContext";
 
-import User from "../models/user";
 
-const Login: FC<{
-  otherUsers: User[],
-  setLoggedInUser: React.Dispatch<React.SetStateAction<string>>
-}> = ({ otherUsers, setLoggedInUser }) => {
-
+const Login: FC = () => {
+  const { users, login } = useContext(AuthContext) as AuthContextType;
   const navigate = useNavigate();
-
   const [invalidLogin, setInvalidLogin] = useState(false)
-
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const submitHandler = (e: React.FormEvent) => {
     e.preventDefault();
-
     const username = usernameRef.current!.value;
     const password = passwordRef.current!.value;
-    const foundUser = otherUsers.find((u) => u.username === username);
+    const foundUser = users.find((u) => u.username === username);
     if (foundUser && foundUser.password === password) {
-      alert('You can login!');
-      setLoggedInUser(username);
+      login(username);
       navigate('/');
     } else {
       setInvalidLogin(true);
     }
   }
-
 
   return (
     <>
