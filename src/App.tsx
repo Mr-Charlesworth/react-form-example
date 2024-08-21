@@ -2,7 +2,7 @@ import { useState } from "react"
 
 import { Route, Routes } from 'react-router-dom';
 
-import User from "./models/user";
+import UserModel from "./models/User";
 import RegisterRefs from "./components/RegisterRefs"
 import Login from "./components/Login";
 import Navbar from "./components/Navbar";
@@ -11,7 +11,7 @@ import Home from "./components/Home";
 
 const App = () => {
 
-  const [otherUsers, setOtherUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<UserModel[]>([]);
   const [loggedInUser, setLoggedInUser] = useState('');
 
   return (
@@ -21,13 +21,13 @@ const App = () => {
         <Route path={'/'} element={<Home loggedInUser={loggedInUser} />} />
         <Route
           path={'/register-state'}
-          element={<RegisterState otherUsers={otherUsers} setLoggedInUser={setLoggedInUser} setOtherUsers={setOtherUsers} />}
+          element={<RegisterState users={users} setLoggedInUser={setLoggedInUser} setUsers={setUsers} />}
           />
         <Route
           path={'/register-refs'}
-          element={<RegisterRefs otherUsers={otherUsers} setLoggedInUser={setLoggedInUser} setOtherUsers={setOtherUsers}/>}
+          element={<RegisterRefs users={users} setLoggedInUser={setLoggedInUser} setUsers={setUsers}/>}
         />
-        <Route path={'/login'} element={<Login otherUsers={otherUsers} setLoggedInUser={setLoggedInUser} />} />
+        <Route path={'/login'} element={<Login users={users} setLoggedInUser={setLoggedInUser} />} />
       </Routes>
     </div>
   )

@@ -2,14 +2,14 @@ import { FC, useRef, useState } from "react";
 
 import { css } from "@emotion/css";
 
-import User from "../models/user";
+import UserModel from "../models/User";
 import { validateConfirmation, validatePassword, validateUsername } from "../utils/userValidation";
 
 const RegisterRefs: FC<{
-  otherUsers: User[],
-  setOtherUsers: React.Dispatch<React.SetStateAction<User[]>>,
+  users: UserModel[],
+  setUsers: React.Dispatch<React.SetStateAction<UserModel[]>>,
   setLoggedInUser: React.Dispatch<React.SetStateAction<string>>,
-}> = ({ otherUsers, setOtherUsers, setLoggedInUser }) => {
+}> = ({ users, setUsers, setLoggedInUser }) => {
 
   const [usernameErrors, setUsernameError] = useState<string[]>([]);
   const [passwordErrors, setPasswordError] = useState<string[]>([]);
@@ -26,7 +26,7 @@ const RegisterRefs: FC<{
     const password = passwordRef.current!.value;
     const confirmation = confirmationRef.current!.value;
 
-    const newUsernameErrors = validateUsername(username, otherUsers.map((u) => u.username));
+    const newUsernameErrors = validateUsername(username, users.map((u) => u.username));
     const newPasswordErrors = validatePassword(password);
     const newConfirmationErrors = validateConfirmation(password, confirmation);
 
@@ -39,7 +39,7 @@ const RegisterRefs: FC<{
 
     if (!hasErrors) {
       setLoggedInUser(username);
-      setOtherUsers((prev) => [...prev, { username: username, password: password }]);
+      setUsers((prev) => [...prev, { username: username, password: password }]);
       alert('That went well!')
     }
   }

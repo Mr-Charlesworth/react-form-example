@@ -1,11 +1,11 @@
 import { FC, useRef, useState } from "react";
 
-import User from "../models/user";
+import UserModel from "../models/User";
 
 const Login: FC<{
-  otherUsers: User[],
+  users: UserModel[],
   setLoggedInUser: React.Dispatch<React.SetStateAction<string>>
-}> = ({ otherUsers, setLoggedInUser }) => {
+}> = ({ users, setLoggedInUser }) => {
 
   const [invalidLogin, setInvalidLogin] = useState(false)
 
@@ -17,7 +17,8 @@ const Login: FC<{
 
     const username = usernameRef.current!.value;
     const password = passwordRef.current!.value;
-    const foundUser = otherUsers.find((u) => u.username === username);
+    const foundUser = users.find((u) => u.username === username);
+    
     if (foundUser && foundUser.password === password) {
       alert('You can login!');
       setLoggedInUser(username)

@@ -2,14 +2,14 @@ import { FC, useEffect, useState } from "react";
 
 import { css } from "@emotion/css";
 
-import User from "../models/user";
+import UserModel from "../models/User";
 import { validateConfirmation, validatePassword, validateUsername } from "../utils/userValidation";
 
 const RegisterState: FC<{
-  otherUsers: User[],
+  users: UserModel[],
   setLoggedInUser: React.Dispatch<React.SetStateAction<string>>,
-  setOtherUsers: React.Dispatch<React.SetStateAction<User[]>>,
-}> = ({ otherUsers, setLoggedInUser, setOtherUsers }) => {
+  setUsers: React.Dispatch<React.SetStateAction<UserModel[]>>,
+}> = ({ users, setLoggedInUser, setUsers }) => {
 
   const [usernameErrors, setUsernameError] = useState<string[]>([])
   const [passwordErrors, setPasswordError] = useState<string[]>([])
@@ -39,10 +39,10 @@ const RegisterState: FC<{
   };
 
   useEffect(() => {
-    setUsernameError(() => validateUsername(formValues.username, otherUsers.map((u) => u.username)));
+    setUsernameError(() => validateUsername(formValues.username, users.map((u) => u.username)));
     setPasswordError(() => validatePassword(formValues.password));
     setConfirmationError(() => validateConfirmation(formValues.password, formValues.confirmation));
-  }, [formValues, otherUsers]);
+  }, [formValues, users]);
 
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -51,7 +51,7 @@ const RegisterState: FC<{
 
     if (!hasErrors) {
       setLoggedInUser(formValues.username);
-      setOtherUsers((prev) => [...prev, { username: formValues.username, password: formValues.password }]);
+      setUsers((prev) => [...prev, { username: formValues.username, password: formValues.password }]);
       alert('That went well!');
     }
 
